@@ -1,12 +1,10 @@
 {
   "provider": "stackit",
   "provider_name": "STACKIT (Schwarz Group)",
-  "fetched_at": "2026-09-16T08:18:02Z",
+  "fetched_at": "2026-09-23T11:05:43Z",
   "source": "https://pim.api.stackit.cloud/v3alpha1/skus",
   "manual": false,
   "control_plane_cost": 71.71,
-  "price_list_version": "1.0.38",
-  "price_list_date": "2026-05",
   "billing_model": {
     "unit": "hourly",
     "monthly_hours": 720,
@@ -2392,7 +2390,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen1",
+      "hardware": "amd-gen1",
       "gpu_count": 1
     },
     {
@@ -2410,7 +2408,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen1",
+      "hardware": "amd-gen1",
       "gpu_count": 2
     },
     {
@@ -2428,7 +2426,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen1",
+      "hardware": "amd-gen1",
       "gpu_count": 4
     },
     {
@@ -2446,7 +2444,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen2",
+      "hardware": "amd-gen2",
       "gpu_count": 1
     },
     {
@@ -2464,7 +2462,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen2",
+      "hardware": "amd-gen2",
       "gpu_count": 2
     },
     {
@@ -2482,7 +2480,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen2",
+      "hardware": "amd-gen2",
       "gpu_count": 4
     },
     {
@@ -2500,7 +2498,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen3",
+      "hardware": "amd-gen2",
       "gpu_count": 8
     },
     {
@@ -2518,7 +2516,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen3",
+      "hardware": "amd-gen2",
       "gpu_count": 1
     },
     {
@@ -2536,7 +2534,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen3",
+      "hardware": "amd-gen2",
       "gpu_count": 2
     },
     {
@@ -2554,7 +2552,7 @@
       "category": "gpu",
       "dedicated": true,
       "overprovisioned": false,
-      "hardware": "intel-gen3",
+      "hardware": "amd-gen2",
       "gpu_count": 4
     },
     {

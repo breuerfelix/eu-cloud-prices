@@ -19,6 +19,15 @@ COMPUTE_PRODUCTS = frozenset({
     "Confidential Server",
 })
 
+#: The PIM API reports GPU flavors only as ``"hardware": "GPU"``, so the host
+#: CPU cannot be derived. Keyed by flavor family, carried over from the
+#: previously hand-maintained price file.
+GPU_HOST_HARDWARE = {
+    "n1": "amd-gen1",
+    "n2": "amd-gen2",
+    "n3": "amd-gen2",
+}
+
 
 def _parse_category(title: str, flavor: str) -> str:
     """Map STACKIT SKU title / flavor prefix to valid schema category enum."""
@@ -46,8 +55,7 @@ def _parse_hardware(hardware: str, flavor: str) -> str:
     if "arm" in hw:
         return f"arm{gen}"
     if "gpu" in hw:
-        # GPU flavors usually based on AMD or Intel host nodes
-        return f"amd{gen}" if (m and m.group(2) == "a") else f"intel{gen}"
+        return GPU_HOST_HARDWARE.get(flavor.split(".", 1)[0], "unknown")
     return f"{hw}{gen}" if hw else "unknown"
 
 
@@ -62,6 +70,17 @@ def parse_skus(skus: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], float 
     instances = []
     seen_flavors: set[str] = set()
     k8s_cost: float | None = None
+
+    # Most flavors are listed twice: a single-AZ SKU and a pricier metro
+    # (``-m``, multi-AZ) variant. Prefer the single-AZ SKU; keep the metro one
+    # only when no single-AZ SKU exists for that flavor.
+    non_metro_flavors = {
+        (s.get("productSpecificAttributes") or {}).get("flavor")
+        for s in skus
+        if not s.get("deprecated")
+        and s.get("priceListVisibility", False)
+        and not (s.get("productSpecificAttributes") or {}).get("metro", False)
+    }
 
     for item in skus:
         if item.get("deprecated"):
@@ -88,9 +107,7 @@ def parse_skus(skus: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], float 
         if not flavor:
             continue
 
-        is_metro = attrs.get("metro", False)
-        # Filter metro variants to prevent duplicates, unless flavor is only available in metro
-        if is_metro and flavor != "n1.56d.g4":
+        if attrs.get("metro", False) and flavor in non_metro_flavors:
             continue
 
         if flavor in seen_flavors:

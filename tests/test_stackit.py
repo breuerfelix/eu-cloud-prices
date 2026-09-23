@@ -106,6 +106,33 @@ def test_gpu_count_extraction():
     assert stackit._parse_gpu_count("g1a.32d") is None
 
 
+def test_gpu_hardware_uses_family_map():
+    instances, _ = stackit.parse_skus(FIXTURE_SKUS)
+    by_id = {inst["id"]: inst for inst in instances}
+
+    assert by_id["n2.14d.g1"]["hardware"] == "amd-gen2"
+    assert stackit._parse_hardware("GPU", "n3.104d.g8") == "amd-gen2"
+    assert stackit._parse_hardware("GPU", "n9.14d.g1") == "unknown"
+
+
+def test_metro_sku_kept_only_without_single_az_sku():
+    instances, _ = stackit.parse_skus(FIXTURE_SKUS)
+    ids = [inst["id"] for inst in instances]
+
+    # n1.56d.g4 exists only as a metro SKU in the fixture
+    assert "n1.56d.g4" in ids
+    # g1a.32d has both; only one instance, from the single-AZ SKU
+    assert ids.count("g1a.32d") == 1
+
+    az = next(
+        s for s in FIXTURE_SKUS
+        if (s.get("productSpecificAttributes") or {}).get("flavor") == "g1a.32d"
+        and not s["productSpecificAttributes"].get("metro")
+    )
+    by_id = {inst["id"]: inst for inst in instances}
+    assert by_id["g1a.32d"]["price_hourly"] == round(float(az["price"]["list"]["value"]), 8)
+
+
 def test_control_plane_cost_extraction():
     _, k8s_cost = stackit.parse_skus(FIXTURE_SKUS)
     assert k8s_cost == 71.71
